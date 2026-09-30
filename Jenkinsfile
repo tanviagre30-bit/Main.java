@@ -1,24 +1,23 @@
 pipeline {
-agent any
+    agent any
 
-stages {
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
 
-stage(&#39;Checkout&#39;) {
-steps {
-checkout scm
-}
-}
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner'
 
-stage(&#39;SonarQube Analysis&#39;) {
-steps {
-script {
-def scannerHome = tool &#39;SonarScanner&#39;
-
-withSonarQubeEnv(&#39;SonarQube&#39;) {
-sh &quot;${scannerHome}/bin/sonar-scanner&quot;
-}
-}
-}
-}
-}
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        }
+    }
 }
